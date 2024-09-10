@@ -1,13 +1,14 @@
 <script lang="ts">
-	import type { ChangeEventHandler } from 'svelte/elements';
-	import { total, fixCosts, variableCosts, rest } from '../store';
-
-	const onUpdateFixCosts = (value: any) => {
-		const rest = $total - value.target.value;
-		if (rest < $variableCosts) {
-			$variableCosts = rest;
-		}
-	};
+	import {
+		total,
+		fixCosts,
+		maxFixedCosts,
+		variableCosts,
+		maxVariableCosts,
+		rest,
+		savings,
+		maxSavings
+	} from '../store';
 </script>
 
 <svelte:head>
@@ -26,10 +27,10 @@
 		<input
 			type="range"
 			min="0"
-			max={$total}
+			max={$maxFixedCosts}
 			step="1"
 			bind:value={$fixCosts}
-			on:change={onUpdateFixCosts}
+			disabled={$maxFixedCosts === 0}
 		/>
 		{#if $total !== 0}
 			<span>{$fixCosts} € - {(($fixCosts / $total) * 100).toPrecision(3)} % of total budget</span>
@@ -37,11 +38,32 @@
 	</div>
 	<div class="row">
 		<label for="total">Variable costs:</label>
-		<input type="range" min="0" max={$total - $fixCosts} step="1" bind:value={$variableCosts} />
+		<input
+			type="range"
+			min="0"
+			max={$maxVariableCosts}
+			step="1"
+			bind:value={$variableCosts}
+			disabled={$maxVariableCosts === 0}
+		/>
 		{#if $total !== 0}
 			<span
 				>{$variableCosts} € - {(($variableCosts / $total) * 100).toPrecision(3)} % of total budget</span
 			>
+		{/if}
+	</div>
+	<div class="row">
+		<label for="total">Savings:</label>
+		<input
+			type="range"
+			min="0"
+			max={$maxSavings}
+			step="1"
+			bind:value={$savings}
+			disabled={$maxSavings === 0}
+		/>
+		{#if $total !== 0}
+			<span>{$savings} € - {(($savings / $total) * 100).toPrecision(3)} % of total budget</span>
 		{/if}
 	</div>
 	<div>
