@@ -1,11 +1,12 @@
-import { derived, writable } from 'svelte/store';
+import { derived } from 'svelte/store';
+import { persistedWritable } from './persistedWritable';
 
 const DAYS_IN_MONTH = 31;
 
-export const total = writable(1200);
-export const fixCosts = writable(0);
+export const total = persistedWritable('total', 1200);
+export const fixCosts = persistedWritable('fixCosts', 0);
 export const maxFixedCosts = derived(total, ($total) => $total);
-export const dailySpendingBudget = writable(0);
+export const dailySpendingBudget = persistedWritable('dailySpendingBudget', 0);
 export const monthlySpendingBudget = derived(
 	[dailySpendingBudget],
 	([$dailySpendingBudget]) => $dailySpendingBudget * DAYS_IN_MONTH
@@ -13,7 +14,7 @@ export const monthlySpendingBudget = derived(
 export const maxDailySpendingBudget = derived([total, fixCosts], ([$total, $fixCosts]) =>
 	Math.round(($total - $fixCosts) / DAYS_IN_MONTH)
 );
-export const savings = writable(0);
+export const savings = persistedWritable('savings', 0);
 export const maxSavings = derived(
 	[total, fixCosts, monthlySpendingBudget],
 	([$total, $fixCosts, $variableCosts]) => $total - $fixCosts - $variableCosts
