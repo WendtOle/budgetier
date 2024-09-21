@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Card from '../Card.svelte';
+	import Slider from '../Slider.svelte';
 	import {
 		total,
 		fixCosts,
@@ -30,35 +31,13 @@
 		</div>
 	</Card>
 	<Card>
-		<div>
-			<label for="total">Fixkosten:</label>
-			<input
-				type="range"
-				min="0"
-				max={$maxFixedCosts}
-				step="1"
-				bind:value={$fixCosts}
-				disabled={$maxFixedCosts === 0}
-			/>
-			<span>{$fixCosts} €</span>
-		</div>
+		<Slider value={fixCosts} label="Fixkosten" max={$maxFixedCosts} />
 		{#if $total !== 0}
 			<span>{(($fixCosts / $total) * 100).toPrecision(3)} % of total budget</span>
 		{/if}
 	</Card>
 	<Card>
-		<div>
-			<label for="total">Variable costs:</label>
-			<input
-				type="range"
-				min="0"
-				max={$maxVariableCosts}
-				step="1"
-				bind:value={$variableCosts}
-				disabled={$maxVariableCosts === 0}
-			/>
-			<span>{$variableCosts} €</span>
-		</div>
+		<Slider value={variableCosts} label="Variable costs" max={$maxVariableCosts} />
 		{#if $total !== 0}
 			<div>
 				{(($variableCosts / $total) * 100).toPrecision(3)} % of total budget
@@ -66,18 +45,7 @@
 		{/if}
 	</Card>
 	<Card>
-		<div>
-			<label for="total">Savings:</label>
-			<input
-				type="range"
-				min="0"
-				max={$maxSavings}
-				step="1"
-				bind:value={$savings}
-				disabled={$maxSavings === 0}
-			/>
-			<span>{$savings} €</span>
-		</div>
+		<Slider value={savings} label="Savings" max={$maxSavings} />
 		{#if $total !== 0}
 			<span>{(($savings / $total) * 100).toPrecision(3)} % of total budget</span>
 		{/if}
