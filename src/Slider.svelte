@@ -4,10 +4,11 @@
 	export let value: Writable<number>;
 	export let max: number;
 	export let label: string;
+	export let steps: number = 5;
 </script>
 
 <div>
 	<label for="total">{label}:</label>
-	<input type="range" min="0" {max} step="5" bind:value={$value} disabled={max === 0} />
+	<input type="range" min="0" {max} step={steps} bind:value={$value} disabled={max === 0} />
 	<span>{$value} €</span>
 </div>
