@@ -5,8 +5,8 @@
 		total,
 		fixCosts,
 		maxFixedCosts,
-		variableCosts,
-		maxVariableCosts,
+		monthlySpendingBudget,
+		maxMonthlySpendingBudget,
 		rest,
 		savings,
 		maxSavings
@@ -37,10 +37,10 @@
 		{/if}
 	</Card>
 	<Card>
-		<Slider value={variableCosts} label="Variable costs" max={$maxVariableCosts} />
+		<Slider value={monthlySpendingBudget} label="Variable costs" max={$maxMonthlySpendingBudget} />
 		{#if $total !== 0}
 			<div>
-				{(($variableCosts / $total) * 100).toPrecision(3)} % of total budget
+				{(($monthlySpendingBudget / $total) * 100).toPrecision(3)} % of total budget
 			</div>
 		{/if}
 	</Card>
