@@ -1,12 +1,16 @@
-<script>
+<script lang="ts">
+	import type { Readable } from 'svelte/store';
 	import { derived, writable } from 'svelte/store';
 
 	export let title = '';
-	export let forceExpanded = false;
+	export let forceExpanded: Readable<boolean> = writable(false);
 
 	const collapsed = writable(true);
 
-	const isCollapsed = derived(collapsed, ($collapsed) => $collapsed && !forceExpanded);
+	const isCollapsed = derived(
+		[collapsed, forceExpanded],
+		([$collapsed, $forceExpanded]) => $collapsed && !$forceExpanded
+	);
 
 	const handleToggle = () => ($collapsed = !$collapsed);
 	const handleClickOnHeader = () => {
@@ -28,7 +32,7 @@
 	{:else}
 		<div class="header mb-2 pb-3 border-b-2">
 			<span>{title}</span>
-			{#if !forceExpanded}
+			{#if !$forceExpanded}
 				<button class="border rounded-md px-2" on:click={handleToggle}>collapse</button>
 			{/if}
 		</div>

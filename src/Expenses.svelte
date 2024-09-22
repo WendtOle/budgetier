@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { writable } from 'svelte/store';
+	import { derived, writable } from 'svelte/store';
 	import { total, expenses, totalExpenses, expensesOverBudget } from './store';
 	import CollapsableContent from './CollapsableContent.svelte';
 
 	const name = writable('');
 	const amount = writable(0);
-	const collapse = writable(true);
 
 	const handleAddExpense = () => {
 		$expenses = [
@@ -18,9 +17,14 @@
 	const deleteExpense = (idToDelete: string) => () => {
 		$expenses = $expenses.filter(({ id }) => id !== idToDelete);
 	};
+
+	const forceExpanded = derived(
+		expensesOverBudget,
+		($expensesOverBudget) => $expensesOverBudget < 0
+	);
 </script>
 
-<CollapsableContent title="Expenses" forceExpanded={$expensesOverBudget < 0}>
+<CollapsableContent title="Expenses" {forceExpanded}>
 	<div slot="summary">
 		{$totalExpenses}€
 	</div>
