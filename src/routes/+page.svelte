@@ -67,8 +67,13 @@
 	{/if}
 	{#if $expensesOverBudget > 0}
 		<Card title="">
-			<span>Rest which is not assigned yet: {$rest} € </span>
-			<span>{(($rest / $total) * 100).toPrecision(3)} % of total budget</span>
+			<CollapsableContent title="Investing">
+				<div slot="summary">{$rest} €</div>
+				<div slot="content">
+					<div>Rest which is not assigned yet: {$rest} €</div>
+					<div>{(($rest / $total) * 100).toPrecision(3)} % of total budget</div>
+				</div>
+			</CollapsableContent>
 		</Card>
 	{/if}
 </div>
