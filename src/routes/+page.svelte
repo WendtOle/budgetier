@@ -3,11 +3,11 @@
 	import Slider from '../Slider.svelte';
 	import {
 		total,
-		fixCosts,
-		maxFixedCosts,
-		dailySpendingBudget,
-		maxDailySpendingBudget,
-		monthlySpendingBudget,
+		fixCostRelative,
+		fixCostAbsolute,
+		monthlySpendingBudgetRelative,
+		monthlySpendingBudgetAbsolute,
+		dailySpendingBudgetAbsolute,
 		rest
 	} from '../store';
 </script>
@@ -30,22 +30,29 @@
 		</div>
 	</Card>
 	<Card>
-		<Slider value={fixCosts} label="Fixkosten" max={$maxFixedCosts} />
+		<Slider
+			value={fixCostRelative}
+			label="Fixkosten"
+			steps={1}
+			max={100}
+			displayValue={() => $fixCostAbsolute + '€'}
+		/>
 		{#if $total !== 0}
-			<span>{(($fixCosts / $total) * 100).toPrecision(3)} % of total budget</span>
+			<span>{$fixCostRelative} % of total budget</span>
 		{/if}
 	</Card>
 	<Card>
 		<Slider
-			value={dailySpendingBudget}
+			value={monthlySpendingBudgetRelative}
 			label="Variable costs"
-			max={$maxDailySpendingBudget}
+			max={100}
 			steps={1}
-			displayValue={(value) => `${value}€/d - ${$monthlySpendingBudget}€/m`}
+			displayValue={() =>
+				`${$dailySpendingBudgetAbsolute}€/d - ${$monthlySpendingBudgetAbsolute}€/m`}
 		/>
 		{#if $total !== 0}
 			<div>
-				{(($monthlySpendingBudget / $total) * 100).toPrecision(3)} % of total budget
+				{($monthlySpendingBudgetRelative * (100 - $fixCostRelative)) / 100} % of total budget
 			</div>
 		{/if}
 	</Card>
