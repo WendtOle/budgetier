@@ -9,7 +9,6 @@
 </script>
 
 <div>
-	<label for="total">{label}:</label>
 	<input type="range" min="0" {max} step={steps} bind:value={$value} disabled={max === 0} />
 	<span>{displayValue($value)}</span>
 </div>

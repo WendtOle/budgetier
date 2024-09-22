@@ -13,7 +13,7 @@
 </script>
 
 <div class="savings-fund">
-	<span>Savingsfund</span>
+	<span class="font-semibold border-b-2 w-28">Savingsfund</span>
 	<input
 		class="bg-white border border-gray-300 rounded-lg p-2"
 		type="number"

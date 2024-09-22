@@ -19,6 +19,7 @@
 </script>
 
 <div class="expenses">
+	<span class="font-semibold border-b-2 w-28">Expenses</span>
 	{#each $expenses as { id, name, amount }}
 		<div class="flex justify-between">
 			<span>"{name}"</span>

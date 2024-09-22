@@ -33,6 +33,7 @@
 		</div>
 	</Card>
 	<Card>
+		<span class="font-semibold border-b-2 w-28">Fixed costs</span>
 		<Slider
 			value={fixCostRelative}
 			label="Fixkosten"
@@ -45,6 +46,7 @@
 		{/if}
 	</Card>
 	<Card>
+		<span class="font-semibold border-b-2 w-40">Spending budget</span>
 		<Slider
 			value={monthlySpendingBudgetRelative}
 			label="Variable costs"
