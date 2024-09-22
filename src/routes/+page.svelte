@@ -9,14 +9,10 @@
 		monthlySpendingBudgetAbsolute,
 		dailySpendingBudgetAbsolute,
 		rest,
-		expensesOverBudget,
-		savingsFundRelative,
-		savingsFundAbsolute,
-		savingsFundCurrently,
-		savingsFundWouldHave,
-		savingsFundTarget
+		expensesOverBudget
 	} from '../store';
 	import Expenses from '../Expenses.svelte';
+	import SavingsFund from '../SavingsFund.svelte';
 </script>
 
 <svelte:head>
@@ -63,35 +59,9 @@
 			</div>
 		{/if}
 	</Card>
-	<Card>
-		<Expenses />
-	</Card>
+	<Card><Expenses /></Card>
 	{#if $expensesOverBudget > 0}
-		<Card>
-			<span>Savingsfund</span>
-			<input
-				class="bg-white border border-gray-300 rounded-lg p-2"
-				type="number"
-				bind:value={$savingsFundCurrently}
-			/>
-			<Slider
-				value={savingsFundRelative}
-				label="Variable costs"
-				max={100}
-				steps={1}
-				displayValue={() => `${$savingsFundAbsolute}€`}
-			/>
-			{#if $total !== 0}
-				<div>
-					{($monthlySpendingBudgetRelative * (100 - $fixCostRelative)) / 100} % of total budget
-				</div>
-			{/if}
-			<span
-				>Savings fund would reach {$savingsFundWouldHave}€ - ({Math.round(
-					($savingsFundWouldHave / $savingsFundTarget) * 100
-				)} %)</span
-			>
-		</Card>
+		<Card><SavingsFund /></Card>
 	{/if}
 	{#if $expensesOverBudget > 0}
 		<Card>
