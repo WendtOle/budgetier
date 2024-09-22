@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
 	import { total, expenses, totalExpenses, expensesOverBudget } from './store';
+	import CollapsableContent from './CollapsableContent.svelte';
 
 	const name = writable('');
 	const amount = writable(0);
+	const collapse = writable(true);
 
 	const handleAddExpense = () => {
 		$expenses = [
@@ -18,31 +20,36 @@
 	};
 </script>
 
-<div class="expenses">
-	<span class="font-semibold border-b-2 w-28">Expenses</span>
-	{#each $expenses as { id, name, amount }}
+<CollapsableContent title="Expenses" forceExpanded={$expensesOverBudget < 0}>
+	<div slot="summary">
+		{$totalExpenses}€
+	</div>
+
+	<div slot="content" class="expenses">
+		{#each $expenses as { id, name, amount }}
+			<div class="flex justify-between">
+				<span>"{name}"</span>
+				<span>{amount}€</span>
+				<button class="border px-1 rounded-md" on:click={deleteExpense(id)}>Delete</button>
+			</div>
+		{/each}
 		<div class="flex justify-between">
-			<span>"{name}"</span>
-			<span>{amount}€</span>
-			<button class="border px-1 rounded-md" on:click={deleteExpense(id)}>Delete</button>
+			<input class="w-28 border-b-2" bind:value={$name} />
+			<input class="w-28 border-b-2" bind:value={$amount} type="number" />
+			<button class="border px-1 rounded-md" on:click={handleAddExpense}>Add</button>
 		</div>
-	{/each}
-	<div class="flex justify-between">
-		<input class="w-28 border-b-2" bind:value={$name} />
-		<input class="w-28 border-b-2" bind:value={$amount} type="number" />
-		<button class="border px-1 rounded-md" on:click={handleAddExpense}>Add</button>
+		<div>
+			<span
+				>total: {$totalExpenses}€ - {(($totalExpenses / $total) * 100).toPrecision(3)} % of total budget</span
+			>
+		</div>
+		{#if $expensesOverBudget < 0}
+			<span class={`border ${expensesOverBudget ? 'border-red-500' : 'border-transparent'}`}
+				>Expenses are over budget ({Math.abs($expensesOverBudget)})€</span
+			>
+		{/if}
 	</div>
-	<div>
-		<span
-			>total: {$totalExpenses}€ - {(($totalExpenses / $total) * 100).toPrecision(3)} % of total budget</span
-		>
-	</div>
-	{#if $expensesOverBudget < 0}
-		<span class={`border ${expensesOverBudget ? 'border-red-500' : 'border-transparent'}`}
-			>Expenses are over budget ({Math.abs($expensesOverBudget)})€</span
-		>
-	{/if}
-</div>
+</CollapsableContent>
 
 <style>
 	.expenses {

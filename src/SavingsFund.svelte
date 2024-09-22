@@ -1,9 +1,9 @@
 <script lang="ts">
+	import CollapsableContent from './CollapsableContent.svelte';
 	import Slider from './Slider.svelte';
 	import {
 		total,
 		fixCostRelative,
-		monthlySpendingBudgetRelative,
 		savingsFundRelative,
 		savingsFundAbsolute,
 		savingsFundCurrently,
@@ -12,31 +12,37 @@
 	} from './store';
 </script>
 
-<div class="savings-fund">
-	<span class="font-semibold border-b-2 w-28">Savingsfund</span>
-	<input
-		class="bg-white border border-gray-300 rounded-lg p-2"
-		type="number"
-		bind:value={$savingsFundCurrently}
-	/>
-	<Slider
-		value={savingsFundRelative}
-		label="Variable costs"
-		max={100}
-		steps={1}
-		displayValue={() => `${$savingsFundAbsolute}€`}
-	/>
-	{#if $total !== 0}
-		<div>
-			{($monthlySpendingBudgetRelative * (100 - $fixCostRelative)) / 100} % of total budget
-		</div>
-	{/if}
-	<span
-		>Savings fund would reach {$savingsFundWouldHave}€ - ({Math.round(
-			($savingsFundWouldHave / $savingsFundTarget) * 100
-		)} %)</span
-	>
-</div>
+<CollapsableContent title="Savings fund">
+	<div slot="summary">
+		{$savingsFundAbsolute}€
+	</div>
+	<div slot="content" class="savings-fund">
+		<label for="current">Current savings fund amount:</label>
+		<input
+			class="bg-white border border-gray-300 rounded-lg p-2"
+			type="number"
+			id="current"
+			bind:value={$savingsFundCurrently}
+		/>
+		<Slider
+			value={savingsFundRelative}
+			label="Variable costs"
+			max={100}
+			steps={1}
+			displayValue={() => `${$savingsFundAbsolute}€`}
+		/>
+		{#if $total !== 0}
+			<div>
+				{Math.round(($savingsFundAbsolute / $total) * 100)} % of total budget
+			</div>
+		{/if}
+		<span
+			>Savings fund would reach {$savingsFundWouldHave}€ - ({Math.round(
+				($savingsFundWouldHave / $savingsFundTarget) * 100
+			)} %)</span
+		>
+	</div>
+</CollapsableContent>
 
 <style>
 	.savings-fund {

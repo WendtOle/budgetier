@@ -13,6 +13,7 @@
 	} from '../store';
 	import Expenses from '../Expenses.svelte';
 	import SavingsFund from '../SavingsFund.svelte';
+	import CollapsableContent from '../CollapsableContent.svelte';
 </script>
 
 <svelte:head>
@@ -21,7 +22,7 @@
 </svelte:head>
 
 <div class="overflow-auto">
-	<Card>
+	<Card title="Total">
 		<div>
 			<label for="total">Total:</label>
 			<input
@@ -33,40 +34,52 @@
 		</div>
 	</Card>
 	<Card>
-		<span class="font-semibold border-b-2 w-28">Fixed costs</span>
-		<Slider
-			value={fixCostRelative}
-			label="Fixkosten"
-			steps={1}
-			max={100}
-			displayValue={() => $fixCostAbsolute + '€'}
-		/>
-		{#if $total !== 0}
-			<span>{$fixCostRelative} % of total budget</span>
-		{/if}
+		<CollapsableContent title="Fixed costs">
+			<div slot="summary">
+				{$fixCostAbsolute}€
+			</div>
+			<div slot="content">
+				<Slider
+					value={fixCostRelative}
+					label="Fixkosten"
+					steps={1}
+					max={100}
+					displayValue={() => $fixCostAbsolute + '€'}
+				/>
+				{#if $total !== 0}
+					<span>{$fixCostRelative} % of total budget</span>
+				{/if}
+			</div>
+		</CollapsableContent>
 	</Card>
 	<Card>
-		<span class="font-semibold border-b-2 w-40">Spending budget</span>
-		<Slider
-			value={monthlySpendingBudgetRelative}
-			label="Variable costs"
-			max={100}
-			steps={1}
-			displayValue={() =>
-				`${$dailySpendingBudgetAbsolute}€/d - ${$monthlySpendingBudgetAbsolute}€/m`}
-		/>
-		{#if $total !== 0}
-			<div>
-				{($monthlySpendingBudgetRelative * (100 - $fixCostRelative)) / 100} % of total budget
+		<CollapsableContent title="Spending budget">
+			<div slot="summary">
+				{$monthlySpendingBudgetAbsolute}€
 			</div>
-		{/if}
+			<div slot="content">
+				<Slider
+					value={monthlySpendingBudgetRelative}
+					label="Variable costs"
+					max={100}
+					steps={1}
+					displayValue={() =>
+						`${$dailySpendingBudgetAbsolute}€/d - ${$monthlySpendingBudgetAbsolute}€/m`}
+				/>
+				{#if $total !== 0}
+					<div>
+						{($monthlySpendingBudgetRelative * (100 - $fixCostRelative)) / 100} % of total budget
+					</div>
+				{/if}
+			</div>
+		</CollapsableContent>
 	</Card>
 	<Card><Expenses /></Card>
 	{#if $expensesOverBudget > 0}
-		<Card><SavingsFund /></Card>
+		<Card title=""><SavingsFund /></Card>
 	{/if}
 	{#if $expensesOverBudget > 0}
-		<Card>
+		<Card title="">
 			<span>Rest which is not assigned yet: {$rest} € </span>
 			<span>{(($rest / $total) * 100).toPrecision(3)} % of total budget</span>
 		</Card>
