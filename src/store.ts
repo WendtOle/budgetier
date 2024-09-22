@@ -4,10 +4,16 @@ import { persistedWritable } from './persistedWritable';
 const DAYS_IN_MONTH = 31;
 
 export const total = persistedWritable('total', 1200);
-export const fixCostRelative = persistedWritable('fixCostRelative', 0);
-export const fixCostAbsolute = derived([total, fixCostRelative], ([$total, $fixCostRelative]) =>
-	Math.round(($total * $fixCostRelative) / 100)
+export const fixedCostsNeed = persistedWritable('fixedCostsNeed', 0);
+export const fixedCostLeftOver = persistedWritable('fixedCostLeftOver', 0);
+export const fixCostAbsolute = derived(
+	[fixedCostsNeed, fixedCostLeftOver],
+	([$fixedCostsNeed, $fixedCostLeftOver]) => $fixedCostsNeed - $fixedCostLeftOver
 );
+export const fixCostRelative = derived([total, fixCostAbsolute], ([$total, $fixCostAbsolute]) =>
+	Math.round(($fixCostAbsolute / $total) * 100)
+);
+
 export const monthlySpendingBudgetRelative = persistedWritable('monthlySpendingBudgetRelative', 0);
 export const monthlySpendingBudgetAbsolute = derived(
 	[total, fixCostAbsolute, monthlySpendingBudgetRelative],

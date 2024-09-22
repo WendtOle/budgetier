@@ -3,7 +3,6 @@
 	import Slider from './Slider.svelte';
 	import {
 		total,
-		fixCostRelative,
 		savingsFundRelative,
 		savingsFundAbsolute,
 		savingsFundCurrently,

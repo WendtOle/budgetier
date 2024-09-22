@@ -1,6 +1,11 @@
 <script lang="ts">
-	import Slider from './Slider.svelte';
-	import { total, fixCostRelative, fixCostAbsolute } from './store';
+	import {
+		total,
+		fixCostAbsolute,
+		fixedCostsNeed,
+		fixedCostLeftOver,
+		fixCostRelative
+	} from './store';
 	import CollapsableContent from './CollapsableContent.svelte';
 </script>
 
@@ -9,17 +14,34 @@
 		<div slot="summary">
 			{$fixCostAbsolute}€
 		</div>
-		<div slot="content">
-			<Slider
-				value={fixCostRelative}
-				label="Fixkosten"
-				steps={1}
-				max={100}
-				displayValue={() => $fixCostAbsolute + '€'}
-			/>
-			{#if $total !== 0}
-				<span>{$fixCostRelative} % of total budget</span>
-			{/if}
+		<div slot="content" class="content">
+			<div>
+				<label for="total">Total need</label>
+				<input
+					id="total"
+					bind:value={$fixedCostsNeed}
+					type="number"
+					class="bg-white border border-gray-300 rounded-lg p-2"
+				/>
+			</div>
+			<div>
+				<label for="left-over">Left over</label>
+				<input
+					id="left-over"
+					bind:value={$fixedCostLeftOver}
+					type="number"
+					class="bg-white border border-gray-300 rounded-lg p-2"
+				/>
+			</div>
+			<span>{$fixCostAbsolute}€ - {$fixCostRelative} % of total budget</span>
 		</div>
 	</CollapsableContent>
 </div>
+
+<style>
+	.content {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+</style>
