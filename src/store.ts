@@ -18,7 +18,22 @@ export const dailySpendingBudgetAbsolute = derived(
 	[monthlySpendingBudgetAbsolute],
 	([$monthlySpendingBudgetAbsolute]) => Math.round($monthlySpendingBudgetAbsolute / DAYS_IN_MONTH)
 );
+
+export const expenses = persistedWritable<Array<{ id: string; name: string; amount: number }>>(
+	'expenses',
+	[]
+);
+export const totalExpenses = derived(expenses, ($expenses) =>
+	$expenses.reduce((acc, expense) => acc + expense.amount, 0)
+);
+export const expensesOverBudget = derived(
+	[total, fixCostAbsolute, monthlySpendingBudgetAbsolute, totalExpenses],
+	([$total, $fixCostAbsolute, $monthlySpendingBudgetAbsolute, $totalExpenses]) =>
+		$total - $fixCostAbsolute - $monthlySpendingBudgetAbsolute - $totalExpenses
+);
+
 export const rest = derived(
-	[total, fixCostAbsolute, monthlySpendingBudgetAbsolute],
-	([$total, $fixCosts, $variableCosts]) => $total - $fixCosts - $variableCosts
+	[total, fixCostAbsolute, monthlySpendingBudgetAbsolute, totalExpenses],
+	([$total, $fixCosts, $variableCosts, $totalExpenses]) =>
+		$total - $fixCosts - $variableCosts - $totalExpenses
 );
