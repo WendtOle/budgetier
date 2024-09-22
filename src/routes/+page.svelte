@@ -23,15 +23,18 @@
 
 <div class="overflow-auto">
 	<Card title="Total">
-		<div>
-			<label for="total">Total:</label>
-			<input
-				class="bg-white border border-gray-300 rounded-lg p-2"
-				id="total"
-				type="number"
-				bind:value={$total}
-			/>
-		</div>
+		<CollapsableContent title="Income">
+			<div slot="summary">
+				{$total}€
+			</div>
+			<div slot="content">
+				<input
+					class="bg-white border border-gray-300 rounded-lg p-2"
+					type="number"
+					bind:value={$total}
+				/>
+			</div>
+		</CollapsableContent>
 	</Card>
 	<Card>
 		<FixedCosts />
