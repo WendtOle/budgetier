@@ -32,14 +32,15 @@
 	<div slot="content" class="expenses">
 		{#each $expenses as { id, name, amount }}
 			<div class="flex justify-between">
-				<span>"{name}"</span>
-				<span>{amount}€</span>
+				<div>
+					<span>{amount}€</span> - <span>"{name}"</span>
+				</div>
 				<button class="border px-1 rounded-md" on:click={deleteExpense(id)}>Delete</button>
 			</div>
 		{/each}
 		<div class="flex justify-between">
-			<input class="w-28 border-b-2" bind:value={$name} />
-			<input class="w-28 border-b-2" bind:value={$amount} type="number" />
+			<input class="w-28 border-b-2" bind:value={$amount} type="number" placeholder="amount" />
+			<input class="w-28 border-b-2" bind:value={$name} placeholder="description" />
 			<button class="border px-1 rounded-md" on:click={handleAddExpense}>Add</button>
 		</div>
 		<div>
