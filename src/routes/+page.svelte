@@ -50,12 +50,13 @@
 					label="Variable costs"
 					max={100}
 					steps={1}
-					displayValue={() =>
-						`${$dailySpendingBudgetAbsolute}€/d - ${$monthlySpendingBudgetAbsolute}€/m`}
+					displayValue={() => `${$dailySpendingBudgetAbsolute}€/d`}
 				/>
 				{#if $total !== 0}
 					<div>
-						{($monthlySpendingBudgetRelative * (100 - $fixCostRelative)) / 100} % of total budget
+						{$monthlySpendingBudgetAbsolute}€ - {($monthlySpendingBudgetRelative *
+							(100 - $fixCostRelative)) /
+							100} % of total budget
 					</div>
 				{/if}
 			</div>
