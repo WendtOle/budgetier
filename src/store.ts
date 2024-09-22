@@ -32,8 +32,23 @@ export const expensesOverBudget = derived(
 		$total - $fixCostAbsolute - $monthlySpendingBudgetAbsolute - $totalExpenses
 );
 
+export const savingsFundCurrently = persistedWritable('savingsFundCurrently', 0);
+export const savingsFundTarget = derived([total], ([$total]) => Math.round($total * 3));
+export const savingsFundRelative = persistedWritable('savingsFundRelative', 0);
+export const savingsFundAbsolute = derived(
+	[total, fixCostAbsolute, monthlySpendingBudgetAbsolute, totalExpenses, savingsFundRelative],
+	([$total, $fixCosts, $variableCosts, $totalExpenses, $savingsFundRelative]) => {
+		const currentRest = $total - $fixCosts - $variableCosts - $totalExpenses;
+		return Math.round((currentRest * $savingsFundRelative) / 100);
+	}
+);
+export const savingsFundWouldHave = derived(
+	[savingsFundCurrently, savingsFundAbsolute],
+	([$savingsFundCurrently, $savingsFundAbsolute]) => $savingsFundCurrently + $savingsFundAbsolute
+);
+
 export const rest = derived(
-	[total, fixCostAbsolute, monthlySpendingBudgetAbsolute, totalExpenses],
-	([$total, $fixCosts, $variableCosts, $totalExpenses]) =>
-		$total - $fixCosts - $variableCosts - $totalExpenses
+	[total, fixCostAbsolute, monthlySpendingBudgetAbsolute, totalExpenses, savingsFundAbsolute],
+	([$total, $fixCosts, $variableCosts, $totalExpenses, $savingsFundAbsolute]) =>
+		$total - $fixCosts - $variableCosts - $totalExpenses - $savingsFundAbsolute
 );
