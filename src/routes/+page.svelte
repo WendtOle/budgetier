@@ -4,7 +4,6 @@
 	import {
 		total,
 		fixCostRelative,
-		fixCostAbsolute,
 		monthlySpendingBudgetRelative,
 		monthlySpendingBudgetAbsolute,
 		dailySpendingBudgetAbsolute,
@@ -14,6 +13,7 @@
 	import Expenses from '../Expenses.svelte';
 	import SavingsFund from '../SavingsFund.svelte';
 	import CollapsableContent from '../CollapsableContent.svelte';
+	import FixedCosts from '../FixedCosts.svelte';
 </script>
 
 <svelte:head>
@@ -34,23 +34,7 @@
 		</div>
 	</Card>
 	<Card>
-		<CollapsableContent title="Fixed costs">
-			<div slot="summary">
-				{$fixCostAbsolute}€
-			</div>
-			<div slot="content">
-				<Slider
-					value={fixCostRelative}
-					label="Fixkosten"
-					steps={1}
-					max={100}
-					displayValue={() => $fixCostAbsolute + '€'}
-				/>
-				{#if $total !== 0}
-					<span>{$fixCostRelative} % of total budget</span>
-				{/if}
-			</div>
-		</CollapsableContent>
+		<FixedCosts />
 	</Card>
 	<Card>
 		<CollapsableContent title="Spending budget">
