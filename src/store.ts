@@ -14,14 +14,9 @@ export const monthlySpendingBudget = derived(
 export const maxDailySpendingBudget = derived([total, fixCosts], ([$total, $fixCosts]) =>
 	Math.round(($total - $fixCosts) / DAYS_IN_MONTH)
 );
-export const savings = persistedWritable('savings', 0);
-export const maxSavings = derived(
+export const rest = derived(
 	[total, fixCosts, monthlySpendingBudget],
 	([$total, $fixCosts, $variableCosts]) => $total - $fixCosts - $variableCosts
-);
-export const rest = derived(
-	[total, fixCosts, monthlySpendingBudget, savings],
-	([$total, $fixCosts, $variableCosts, $savings]) => $total - $fixCosts - $variableCosts - $savings
 );
 
 maxFixedCosts.subscribe((max) => {
@@ -32,8 +27,4 @@ maxDailySpendingBudget.subscribe((max) => {
 	dailySpendingBudget.update((currentDailySpendingBudget) =>
 		currentDailySpendingBudget > max ? max : currentDailySpendingBudget
 	);
-});
-
-maxSavings.subscribe((max) => {
-	savings.update((currentSavings) => (currentSavings > max ? max : currentSavings));
 });

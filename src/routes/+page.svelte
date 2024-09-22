@@ -8,9 +8,7 @@
 		dailySpendingBudget,
 		maxDailySpendingBudget,
 		monthlySpendingBudget,
-		rest,
-		savings,
-		maxSavings
+		rest
 	} from '../store';
 </script>
 
@@ -52,12 +50,7 @@
 		{/if}
 	</Card>
 	<Card>
-		<Slider value={savings} label="Savings" max={$maxSavings} />
-		{#if $total !== 0}
-			<span>{(($savings / $total) * 100).toPrecision(3)} % of total budget</span>
-		{/if}
-	</Card>
-	<Card>
-		<span>Rest which is not assigned yet: {$rest} €</span>
+		<span>Rest which is not assigned yet: {$rest} € </span>
+		<span>{(($rest / $total) * 100).toPrecision(3)} % of total budget</span>
 	</Card>
 </div>
