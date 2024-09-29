@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
 	import CollapsableContent from './CollapsableContent.svelte';
-	import type { FixedValueList } from './types';
+	import type { FixedValue } from './types';
 
 	export let title: string;
-	export let value: FixedValueList = [];
-	export let handleUpdate: (newState: FixedValueList) => void;
+	export let value: FixedValue[] = [];
+	export let handleUpdate: (newState: FixedValue[]) => void;
 	export let handleDelete: () => void;
 
 	const name = writable('');
