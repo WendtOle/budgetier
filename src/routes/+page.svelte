@@ -7,6 +7,7 @@
 		monthlySpendingBudgetRelative,
 		monthlySpendingBudgetAbsolute,
 		dailySpendingBudgetAbsolute,
+		monthlySpendingBudgetSteps,
 		rest,
 		expensesOverBudget
 	} from '../store';
@@ -49,14 +50,14 @@
 					value={monthlySpendingBudgetRelative}
 					label="Variable costs"
 					max={100}
-					steps={1}
+					steps={$monthlySpendingBudgetSteps}
 					displayValue={() => `${$dailySpendingBudgetAbsolute}€/d`}
 				/>
 				{#if $total !== 0}
 					<div>
-						{$monthlySpendingBudgetAbsolute}€ - {($monthlySpendingBudgetRelative *
-							(100 - $fixCostRelative)) /
-							100} % of total budget
+						{$monthlySpendingBudgetAbsolute}€ - {Math.round(
+							($monthlySpendingBudgetRelative * (100 - $fixCostRelative)) / 100
+						)} % of total budget
 					</div>
 				{/if}
 			</div>

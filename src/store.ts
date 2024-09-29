@@ -17,9 +17,20 @@ export const fixCostRelative = derived([total, fixCostAbsolute], ([$total, $fixC
 export const monthlySpendingBudgetRelative = persistedWritable('monthlySpendingBudgetRelative', 0);
 export const monthlySpendingBudgetAbsolute = derived(
 	[total, fixCostAbsolute, monthlySpendingBudgetRelative],
-	([$total, $fixCostAbsolute, $monthlySpendingBudgetRelative]) =>
-		Math.round((($total - $fixCostAbsolute) * $monthlySpendingBudgetRelative) / 100)
+	([$total, $fixCostAbsolute, $monthlySpendingBudgetRelative]) => {
+		const max = $total - $fixCostAbsolute;
+		return Math.round((max * $monthlySpendingBudgetRelative) / 100);
+	}
 );
+
+export const monthlySpendingBudgetSteps = derived(
+	[total, fixCostAbsolute],
+	([$total, $fixCostAbsolute]) => {
+		const max = $total - $fixCostAbsolute;
+		return 100 / (max / DAYS_IN_MONTH);
+	}
+);
+
 export const dailySpendingBudgetAbsolute = derived(
 	[monthlySpendingBudgetAbsolute],
 	([$monthlySpendingBudgetAbsolute]) => Math.round($monthlySpendingBudgetAbsolute / DAYS_IN_MONTH)
