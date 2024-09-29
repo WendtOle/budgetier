@@ -3,20 +3,19 @@ export interface Budget {
 }
 
 export interface BudgetBlock {
+	id: string;
 	type: BudgetBlockType;
 	content: FixedValueList;
 }
 
-enum BudgetBlockType {
+export enum BudgetBlockType {
 	INCOME = 'INCOME',
 	EXPENSE = 'EXPENSE'
 }
 
-interface FixedValueList {
-	entries: FixedValue[];
-}
+export type FixedValueList = FixedValue[];
 
-interface FixedValue {
+export interface FixedValue {
 	id: string;
 	name: string;
 	amount: number;
