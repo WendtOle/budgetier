@@ -2,7 +2,7 @@
 	import FixedValueListComponent from '../FixedValueList.svelte';
 	import { budget } from '../generalStore';
 	import { BudgetBlockType } from '../types';
-	import type { FixedValueList } from '../types';
+	import type { BudgetBlock, FixedValueList } from '../types';
 	import Card from '../Card.svelte';
 
 	const addBlock = (type: BudgetBlockType) => () => {
@@ -18,6 +18,45 @@
 			]
 		};
 	};
+
+	$: blocks = $budget.blocks
+		.reduce(
+			(acc, cur) => {
+				const currSum = cur.content.reduce((acc, { amount }) => acc + amount, 0);
+				const lastEntry = acc[acc.length - 1] ?? { income: 0, expense: 0 };
+
+				if (cur.type === BudgetBlockType.INCOME) {
+					const total = lastEntry.income + currSum;
+					return [
+						...acc,
+						{
+							...lastEntry,
+							blockId: cur.id,
+							income: total
+						}
+					];
+				}
+
+				const total = lastEntry.expense + currSum;
+
+				return [
+					...acc,
+					{
+						...lastEntry,
+						blockId: cur.id,
+						expense: total
+					}
+				];
+			},
+			[] as { blockId: string; income: number; expense: number }[]
+		)
+		.reduce(
+			(acc, { blockId, ...rest }) => ({
+				...acc,
+				[blockId]: rest
+			}),
+			{} as Record<string, { income: number; expense: number }>
+		);
 </script>
 
 <svelte:head>
@@ -36,6 +75,7 @@
 					($budget = { ...$budget, blocks: $budget.blocks.filter((b) => b.id !== block.id) })}
 			/>
 		</Card>
+		<div>{`${blocks[block.id].expense}€ / ${blocks[block.id].income}€ spent`}</div>
 	{/each}
 	<button class="border rounded-md px-2" on:click={addBlock(BudgetBlockType.INCOME)}
 		>Add income block</button
