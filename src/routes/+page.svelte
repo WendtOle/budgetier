@@ -95,6 +95,14 @@
 							order: $budget.order.filter((id) => id !== blockId)
 						};
 					}}
+					handleMoveUp={() => {
+						const index = $budget.order.indexOf(blockId);
+						if (index > 0) {
+							const newOrder = [...$budget.order];
+							[newOrder[index], newOrder[index - 1]] = [newOrder[index - 1], newOrder[index]];
+							$budget = { ...$budget, order: newOrder };
+						}
+					}}
 				/>
 			{:else if block.typeOfBlock === BudgetBlockType.SavingsEntry}
 				<SavingsFund

@@ -7,6 +7,7 @@
 	export let value: FixedValue[] = [];
 	export let handleUpdate: (newState: FixedValue[]) => void;
 	export let handleDelete: () => void;
+	export let handleMoveUp: () => void;
 
 	const name = writable('');
 	const amount = writable(0);
@@ -52,6 +53,7 @@
 			<span>total: {total} total€</span>
 		</div>
 		<button class="border rounded-md px-2" on:click={handleDelete}>Delete block</button>
+		<button class="border rounded-md px-2" on:click={handleMoveUp}>Move block up</button>
 	</div>
 </CollapsableContent>
 
