@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { writable } from 'svelte/store';
 	import CollapsableContent from './CollapsableContent.svelte';
 	import Slider from './Slider.svelte';
 
@@ -7,8 +6,6 @@
 	export let onStateChange: (newState: { alreadyPresent: number; willAdd: number }) => void;
 	export let target: number;
 	export let maxAvailable: number;
-
-	const percent = writable(state.willAdd === 0 ? 0 : maxAvailable / state.willAdd);
 
 	$: willState = state.alreadyPresent + state.willAdd;
 </script>
@@ -31,7 +28,7 @@
 				})}
 		/>
 		<Slider
-			value={$percent}
+			value={(state.willAdd / maxAvailable) * 100}
 			onChange={(newValue) =>
 				onStateChange({
 					...state,
