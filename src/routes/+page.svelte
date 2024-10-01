@@ -1,76 +1,57 @@
 <script lang="ts">
 	import FixedValueListComponent from '../FixedValueList.svelte';
 	import { budget } from '../generalStore';
-	import { BudgetBlockType, IncomeOrExpense, type FixedValue, type FixedValueList } from '../types';
+	import {
+		BudgetBlockType,
+		IncomeOrExpense,
+		type BudgetBlock,
+		type FixedValue,
+		type FixedValueList
+	} from '../types';
 	import Card from '../Card.svelte';
 	import SavingsFund from '../SavingsFund.svelte';
 	import CollapsableContent from '../CollapsableContent.svelte';
+	import { getTotalAmount } from '../utils';
 
 	const newId = () => 'id-' + Math.random().toString(36).substr(2, 9);
 
-	const addBlock = (type: IncomeOrExpense) => () => {
+	const addBlock = (block: BudgetBlock) => {
 		const id = newId();
 		$budget = {
 			...$budget,
 			blocks: {
 				...$budget.blocks,
-				[id]: { type, content: [], typeOfBlock: BudgetBlockType.FixedValueList }
+				[id]: block
 			},
 			order: [...$budget.order, id]
 		};
 	};
 
-	const addSavingsBlock = () => {
-		const id = newId();
-		$budget = {
-			...$budget,
-			blocks: {
-				...$budget.blocks,
-				[id]: {
-					name: 'Savings fund',
-					type: IncomeOrExpense.EXPENSE,
-					alreadyPresent: 0,
-					willAdd: 0,
-					typeOfBlock: BudgetBlockType.SavingsEntry
-				}
-			},
-			order: [...$budget.order, id]
-		};
-	};
+	const addListBlock = (type: IncomeOrExpense) => () =>
+		addBlock({ type, content: [], typeOfBlock: BudgetBlockType.FixedValueList });
+
+	const addSavingsBlock = () =>
+		addBlock({
+			name: 'Savings fund',
+			type: IncomeOrExpense.EXPENSE,
+			alreadyPresent: 0,
+			willAdd: 0,
+			typeOfBlock: BudgetBlockType.SavingsEntry
+		});
 
 	$: blocks = $budget.order
 		.map((id) => [id, $budget.blocks[id]] as const)
 		.reduce(
 			(acc, [id, cur]) => {
-				const currSum =
-					cur.typeOfBlock === BudgetBlockType.FixedValueList
-						? cur.content.reduce((acc, { amount }) => acc + amount, 0)
-						: cur.willAdd;
-
+				const currSum = getTotalAmount(cur);
 				const lastEntry = acc[acc.length - 1] ?? { income: 0, expense: 0 };
 
-				if (cur.type === IncomeOrExpense.INCOME) {
-					const total = lastEntry.income + currSum;
-					return [
-						...acc,
-						{
-							...lastEntry,
-							blockId: id,
-							income: total
-						}
-					];
-				}
+				const newExpense =
+					cur.type === IncomeOrExpense.EXPENSE ? lastEntry.expense + currSum : lastEntry.expense;
+				const newIncome =
+					cur.type === IncomeOrExpense.INCOME ? lastEntry.income + currSum : lastEntry.income;
 
-				const total = lastEntry.expense + currSum;
-
-				return [
-					...acc,
-					{
-						...lastEntry,
-						blockId: id,
-						expense: total
-					}
-				];
+				return [...acc, { income: newIncome, expense: newExpense, blockId: id }];
 			},
 			[] as { blockId: string; income: number; expense: number }[]
 		)
@@ -129,10 +110,10 @@
 		</div>
 	{/each}
 	<div>
-		<button class="border rounded-md px-2" on:click={addBlock(IncomeOrExpense.INCOME)}
+		<button class="border rounded-md px-2" on:click={addListBlock(IncomeOrExpense.INCOME)}
 			>Add income block</button
 		>
-		<button class="border rounded-md px-2" on:click={addBlock(IncomeOrExpense.EXPENSE)}
+		<button class="border rounded-md px-2" on:click={addListBlock(IncomeOrExpense.EXPENSE)}
 			>Add expense block</button
 		>
 		<button class="border rounded-md px-2" on:click={addSavingsBlock}>Add savings block</button>

@@ -8,7 +8,7 @@ export interface BaseBudgetBlock {
 	typeOfBlock: BudgetBlockType;
 }
 
-type BudgetBlock = FixedValueList | SavingsEntry;
+export type BudgetBlock = FixedValueList | SavingsEntry;
 
 export enum BudgetBlockType {
 	FixedValueList = 'FixedValueList',
