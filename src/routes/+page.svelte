@@ -4,6 +4,7 @@
 	import { BudgetBlockType, IncomeOrExpense, type FixedValue, type FixedValueList } from '../types';
 	import Card from '../Card.svelte';
 	import SavingsFund from '../SavingsFund.svelte';
+	import CollapsableContent from '../CollapsableContent.svelte';
 
 	const addBlock = (type: IncomeOrExpense) => () => {
 		$budget = {
@@ -78,6 +79,12 @@
 			}),
 			{} as Record<string, { income: number; expense: number }>
 		);
+
+	$: length = $budget.blocks.length;
+	$: lastBlock =
+		length > 0 ? blocks[$budget.blocks[$budget.blocks.length - 1].id] : { income: 0, expense: 0 };
+	$: rest = lastBlock.income - lastBlock.expense;
+	$: totalIncome = lastBlock.income;
 </script>
 
 <svelte:head>
@@ -119,6 +126,15 @@
 		>
 		<button class="border rounded-md px-2" on:click={addSavingsBlock}>Add savings block</button>
 	</div>
+	<Card
+		><CollapsableContent title="Investing">
+			<div slot="summary">{rest} €</div>
+			<div slot="content">
+				<div>Rest which is not assigned yet: {rest} €</div>
+				<div>{((rest / totalIncome) * 100).toPrecision(3)} % of total budget</div>
+			</div>
+		</CollapsableContent></Card
+	>
 </div>
 
 <style>
