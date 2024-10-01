@@ -1,9 +1,9 @@
 export interface Budget {
-	blocks: BudgetBlock[];
+	blocks: Record<string, BudgetBlock>;
+	order: string[];
 }
 
 export interface BaseBudgetBlock {
-	id: string;
 	type: IncomeOrExpense;
 	typeOfBlock: BudgetBlockType;
 }

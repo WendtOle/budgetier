@@ -6,45 +6,47 @@
 	import SavingsFund from '../SavingsFund.svelte';
 	import CollapsableContent from '../CollapsableContent.svelte';
 
+	const newId = () => 'id-' + Math.random().toString(36).substr(2, 9);
+
 	const addBlock = (type: IncomeOrExpense) => () => {
+		const id = newId();
 		$budget = {
 			...$budget,
-			blocks: [
+			blocks: {
 				...$budget.blocks,
-				{
-					id: 'id-' + Math.random().toString(36).substr(2, 9),
-					type,
-					content: [],
-					typeOfBlock: BudgetBlockType.FixedValueList
-				}
-			]
+				[id]: { type, content: [], typeOfBlock: BudgetBlockType.FixedValueList }
+			},
+			order: [...$budget.order, id]
 		};
 	};
 
 	const addSavingsBlock = () => {
+		const id = newId();
 		$budget = {
 			...$budget,
-			blocks: [
+			blocks: {
 				...$budget.blocks,
-				{
-					id: 'id-' + Math.random().toString(36).substr(2, 9),
+				[id]: {
 					name: 'Savings fund',
 					type: IncomeOrExpense.EXPENSE,
 					alreadyPresent: 0,
 					willAdd: 0,
 					typeOfBlock: BudgetBlockType.SavingsEntry
 				}
-			]
+			},
+			order: [...$budget.order, id]
 		};
 	};
 
-	$: blocks = $budget.blocks
+	$: blocks = $budget.order
+		.map((id) => [id, $budget.blocks[id]] as const)
 		.reduce(
-			(acc, cur) => {
+			(acc, [id, cur]) => {
 				const currSum =
 					cur.typeOfBlock === BudgetBlockType.FixedValueList
 						? cur.content.reduce((acc, { amount }) => acc + amount, 0)
 						: cur.willAdd;
+
 				const lastEntry = acc[acc.length - 1] ?? { income: 0, expense: 0 };
 
 				if (cur.type === IncomeOrExpense.INCOME) {
@@ -53,7 +55,7 @@
 						...acc,
 						{
 							...lastEntry,
-							blockId: cur.id,
+							blockId: id,
 							income: total
 						}
 					];
@@ -65,7 +67,7 @@
 					...acc,
 					{
 						...lastEntry,
-						blockId: cur.id,
+						blockId: id,
 						expense: total
 					}
 				];
@@ -80,9 +82,9 @@
 			{} as Record<string, { income: number; expense: number }>
 		);
 
-	$: length = $budget.blocks.length;
+	$: length = Object.values($budget.blocks).length;
 	$: lastBlock =
-		length > 0 ? blocks[$budget.blocks[$budget.blocks.length - 1].id] : { income: 0, expense: 0 };
+		length > 0 ? blocks[Object.keys($budget.blocks)[length - 1]] : { income: 0, expense: 0 };
 	$: rest = lastBlock.income - lastBlock.expense;
 	$: totalIncome = lastBlock.income;
 </script>
@@ -93,28 +95,37 @@
 </svelte:head>
 
 <div class="list">
-	{#each $budget.blocks as block, i}
+	{#each $budget.order as blockId, i}
+		{@const block = $budget.blocks[blockId]}
+		{@const currBlockData = blocks[blockId]}
+		{@const lastBlockData = i > 0 ? blocks[$budget.order[i - 1]] : { income: 0, expense: 0 }}
 		<Card>
 			{#if block.typeOfBlock === BudgetBlockType.FixedValueList}
 				<FixedValueListComponent
 					title={block.type === IncomeOrExpense.INCOME ? 'Income' : 'Expenses'}
-					handleUpdate={(value: FixedValue[]) => ((block as FixedValueList).content = value)}
+					handleUpdate={(value: FixedValue[]) =>
+						(($budget.blocks[blockId] as FixedValueList).content = value)}
 					value={block.content}
-					handleDelete={() =>
-						($budget = { ...$budget, blocks: $budget.blocks.filter((b) => b.id !== block.id) })}
+					handleDelete={() => {
+						const { [blockId]: _, ...rest } = $budget.blocks;
+						$budget = {
+							...$budget,
+							blocks: rest,
+							order: $budget.order.filter((id) => id !== blockId)
+						};
+					}}
 				/>
 			{:else if block.typeOfBlock === BudgetBlockType.SavingsEntry}
 				<SavingsFund
 					state={block}
 					target={2705 * 3}
-					maxAvailable={blocks[$budget.blocks[i - 1].id].income -
-						blocks[$budget.blocks[i - 1].id].expense}
-					onStateChange={(newState) => (block = { ...block, ...newState })}
+					maxAvailable={lastBlockData.income - lastBlockData.expense}
+					onStateChange={(newState) => ($budget.blocks[blockId] = { ...block, ...newState })}
 				/>
 			{/if}
 		</Card>
 		<div class="font-bold">
-			{`${blocks[block.id].expense}€ / ${blocks[block.id].income}€ spent`}
+			{`${currBlockData.expense}€ / ${currBlockData.income}€ spent`}
 		</div>
 	{/each}
 	<div>
