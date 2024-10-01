@@ -12,5 +12,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
+		width: 90%;
 	}
 </style>

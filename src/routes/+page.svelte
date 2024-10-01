@@ -43,7 +43,7 @@
 				const currSum =
 					cur.typeOfBlock === BudgetBlockType.FixedValueList
 						? cur.content.reduce((acc, { amount }) => acc + amount, 0)
-						: 0;
+						: cur.willAdd;
 				const lastEntry = acc[acc.length - 1] ?? { income: 0, expense: 0 };
 
 				if (cur.type === IncomeOrExpense.INCOME) {
@@ -85,8 +85,8 @@
 	<meta name="description" content="Simple budgetier app - Budgetier" />
 </svelte:head>
 
-<div class="overflow-auto">
-	{#each $budget.blocks as block}
+<div class="list">
+	{#each $budget.blocks as block, i}
 		<Card>
 			{#if block.typeOfBlock === BudgetBlockType.FixedValueList}
 				<FixedValueListComponent
@@ -100,23 +100,34 @@
 				<SavingsFund
 					state={block}
 					target={2705 * 3}
+					maxAvailable={blocks[$budget.blocks[i - 1].id].income -
+						blocks[$budget.blocks[i - 1].id].expense}
 					onStateChange={(newState) => (block = { ...block, ...newState })}
 				/>
 			{/if}
 		</Card>
-		<div>{`${blocks[block.id].expense}€ / ${blocks[block.id].income}€ spent`}</div>
+		<div class="font-bold">
+			{`${blocks[block.id].expense}€ / ${blocks[block.id].income}€ spent`}
+		</div>
 	{/each}
-	<button class="border rounded-md px-2" on:click={addBlock(IncomeOrExpense.INCOME)}
-		>Add income block</button
-	>
-	<button class="border rounded-md px-2" on:click={addBlock(IncomeOrExpense.EXPENSE)}
-		>Add expense block</button
-	>
-	<button class="border rounded-md px-2" on:click={addSavingsBlock}>Add savings block</button>
+	<div>
+		<button class="border rounded-md px-2" on:click={addBlock(IncomeOrExpense.INCOME)}
+			>Add income block</button
+		>
+		<button class="border rounded-md px-2" on:click={addBlock(IncomeOrExpense.EXPENSE)}
+			>Add expense block</button
+		>
+		<button class="border rounded-md px-2" on:click={addSavingsBlock}>Add savings block</button>
+	</div>
 </div>
 
 <style>
-	.overflow-auto {
+	.list {
 		overflow: auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		gap: 16px;
 	}
 </style>

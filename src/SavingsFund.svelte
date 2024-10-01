@@ -1,19 +1,21 @@
 <script lang="ts">
+	import { writable } from 'svelte/store';
 	import CollapsableContent from './CollapsableContent.svelte';
 	import Slider from './Slider.svelte';
 
 	export let state: { alreadyPresent: number; willAdd: number };
 	export let onStateChange: (newState: { alreadyPresent: number; willAdd: number }) => void;
 	export let target: number;
+	export let maxAvailable: number;
 
-	const { willAdd, alreadyPresent } = state;
+	const percent = writable(state.willAdd === 0 ? 0 : maxAvailable / state.willAdd);
 
-	$: willState = alreadyPresent + willAdd;
+	$: willState = state.alreadyPresent + state.willAdd;
 </script>
 
 <CollapsableContent title="Savings fund">
 	<div slot="summary">
-		{willAdd}€
+		{state.willAdd}€
 	</div>
 	<div slot="content" class="savings-fund">
 		<label for="current">Current savings fund amount:</label>
@@ -21,7 +23,7 @@
 			class="bg-white border border-gray-300 rounded-lg p-2"
 			type="number"
 			id="current"
-			value={alreadyPresent}
+			value={state.alreadyPresent}
 			on:input={(event) =>
 				onStateChange({
 					...state,
@@ -29,15 +31,16 @@
 				})}
 		/>
 		<Slider
-			value={willAdd}
+			value={$percent}
 			onChange={(newValue) =>
 				onStateChange({
 					...state,
-					willAdd: newValue
+					willAdd: Math.round((newValue * maxAvailable) / 100)
 				})}
 			label="Variable costs"
 			max={100}
 			steps={1}
+			displayValue={() => `${state.willAdd} €`}
 		/>
 		<span>Savings fund would reach {willState}€ - ({Math.round((willState / target) * 100)} %)</span
 		>
