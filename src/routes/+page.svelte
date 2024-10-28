@@ -112,14 +112,14 @@
 			{`${currBlockData.expense}€ / ${currBlockData.income}€ spent`}
 		</div>
 	{/each}
-	<div>
-		<button class="border rounded-md px-2" on:click={addListBlock(IncomeOrExpense.INCOME)}
+	<div class="flex flex-col w-80 gap-2 mt-8">
+		<button class="border rounded-md p-2" on:click={addListBlock(IncomeOrExpense.INCOME)}
 			>Add income block</button
 		>
-		<button class="border rounded-md px-2" on:click={addListBlock(IncomeOrExpense.EXPENSE)}
+		<button class="border rounded-md p-2" on:click={addListBlock(IncomeOrExpense.EXPENSE)}
 			>Add expense block</button
 		>
-		<button class="border rounded-md px-2" on:click={addSavingsBlock}>Add savings block</button>
+		<button class="border rounded-md p-2" on:click={addSavingsBlock}>Add savings block</button>
 	</div>
 </div>
 
@@ -130,6 +130,5 @@
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
-		gap: 16px;
 	}
 </style>

@@ -52,8 +52,10 @@
 		<div>
 			<span>total: {total} total€</span>
 		</div>
-		<button class="border rounded-md px-2" on:click={handleDelete}>Delete block</button>
-		<button class="border rounded-md px-2" on:click={handleMoveUp}>Move block up</button>
+		<div class="flex w-full justify-between">
+			<button class="border rounded-md px-4 py-2" on:click={handleDelete}>Delete block</button>
+			<button class="border rounded-md px-4 py-2" on:click={handleMoveUp}>Move block up</button>
+		</div>
 	</div>
 </CollapsableContent>
 
