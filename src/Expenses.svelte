@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { derived, writable } from 'svelte/store';
 	import { total, expenses, totalExpenses, expensesOverBudget } from './store';
-	import CollapsableContent from './CollapsableContent.svelte';
+	import Block from './Block.svelte';
 
 	const name = writable('');
 	const amount = writable(0);
@@ -24,7 +24,7 @@
 	);
 </script>
 
-<CollapsableContent title="Expenses" {forceExpanded}>
+<Block title="Expenses" {forceExpanded}>
 	<div slot="summary">
 		{$totalExpenses}€
 	</div>
@@ -54,7 +54,7 @@
 			>
 		{/if}
 	</div>
-</CollapsableContent>
+</Block>
 
 <style>
 	.expenses {

@@ -6,11 +6,11 @@
 		fixedCostLeftOver,
 		fixCostRelative
 	} from './store';
-	import CollapsableContent from './CollapsableContent.svelte';
+	import Block from './Block.svelte';
 </script>
 
 <div>
-	<CollapsableContent title="Fixed costs">
+	<Block title="Fixed costs">
 		<div slot="summary">
 			{$fixCostAbsolute}€
 		</div>
@@ -35,7 +35,7 @@
 			</div>
 			<span>{$fixCostAbsolute}€ - {$fixCostRelative} % of total budget</span>
 		</div>
-	</CollapsableContent>
+	</Block>
 </div>
 
 <style>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { writable } from 'svelte/store';
-	import CollapsableContent from './CollapsableContent.svelte';
+	import Block from './Block.svelte';
 	import type { FixedValue } from './types';
 	import { budgetBlockToEdit } from './generalStore';
 
@@ -32,7 +32,7 @@
 	$: total = value.reduce((acc, { amount }) => acc + amount, 0);
 </script>
 
-<CollapsableContent {title} {forceExpanded}>
+<Block {title} {forceExpanded}>
 	<div slot="summary">
 		{total}€
 	</div>
@@ -62,7 +62,7 @@
 			{/if}
 		</div>
 	</div>
-</CollapsableContent>
+</Block>
 
 <style>
 	.expenses {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CollapsableContent from './CollapsableContent.svelte';
+	import Block from './Block.svelte';
 	import { budgetBlockToEdit } from './generalStore';
 	import Slider from './Slider.svelte';
 
@@ -17,7 +17,7 @@
 	$: willState = state.alreadyPresent + state.willAdd;
 </script>
 
-<CollapsableContent title={title}>
+<Block title={title}>
 	<div slot="summary">
 		{state.willAdd}€
 	</div>
@@ -55,7 +55,7 @@
 			{/if}
 		</div>
 	</div>
-</CollapsableContent>
+</Block>
 
 <style>
 	.savings-fund {
