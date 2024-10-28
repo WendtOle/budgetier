@@ -111,7 +111,7 @@
 				/>
 			{/if}
 		</Card>
-		<div class="font-bold" class:text-red-500={currBlockData.expense > currBlockData.income}>
+		<div class="font-bold text-right w-80" class:text-red-500={currBlockData.expense > currBlockData.income}>
 			{`${currBlockData.expense}€ / ${currBlockData.income}€ spent`}
 		</div>
 	{/each}
