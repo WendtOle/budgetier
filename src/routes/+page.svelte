@@ -8,7 +8,6 @@
 		type FixedValue,
 		type FixedValueList
 	} from '../types';
-	import Card from '../Card.svelte';
 	import SavingsFund from '../SavingsFund.svelte';
 	import { getTotalAmount } from '../utils';
 
@@ -90,30 +89,28 @@
 			[newOrder[index], newOrder[index - 1]] = [newOrder[index - 1], newOrder[index]];
 			$budget = { ...$budget, order: newOrder };
 		} : undefined}
-		<Card>
-			{#if block.typeOfBlock === BudgetBlockType.FixedValueList}
-				<FixedValueListComponent
-					id={blockId}
-					title={block.title ? block.title : block.type === IncomeOrExpense.INCOME ? 'Income' : 'Expenses'}
-					handleUpdate={(value: FixedValue[]) =>
-						(($budget.blocks[blockId] as FixedValueList).content = value)}
-					value={block.content}
-					handleDelete={handleDelete}
-					handleMoveUp={handleMoveUp}
-				/>
-			{:else if block.typeOfBlock === BudgetBlockType.SavingsEntry}
-				<SavingsFund
-					id={blockId}
-					title={block.title}
-					state={block}
-					target={2705 * 3}
-					maxAvailable={lastBlockData.income - lastBlockData.expense}
-					onStateChange={(newState) => ($budget.blocks[blockId] = { ...block, ...newState })}
-					handleDelete={handleDelete}
-					handleMoveUp={handleMoveUp}
-				/>
-			{/if}
-		</Card>
+		{#if block.typeOfBlock === BudgetBlockType.FixedValueList}
+			<FixedValueListComponent
+				id={blockId}
+				title={block.title ? block.title : block.type === IncomeOrExpense.INCOME ? 'Income' : 'Expenses'}
+				handleUpdate={(value: FixedValue[]) =>
+					(($budget.blocks[blockId] as FixedValueList).content = value)}
+				value={block.content}
+				handleDelete={handleDelete}
+				handleMoveUp={handleMoveUp}
+			/>
+		{:else if block.typeOfBlock === BudgetBlockType.SavingsEntry}
+			<SavingsFund
+				id={blockId}
+				title={block.title}
+				state={block}
+				target={2705 * 3}
+				maxAvailable={lastBlockData.income - lastBlockData.expense}
+				onStateChange={(newState) => ($budget.blocks[blockId] = { ...block, ...newState })}
+				handleDelete={handleDelete}
+				handleMoveUp={handleMoveUp}
+			/>
+		{/if}
 		<div class="font-bold text-right w-80" class:text-red-500={currBlockData.expense > currBlockData.income}>
 			{`${currBlockData.expense}€ / ${currBlockData.income}€ spent`}
 		</div>

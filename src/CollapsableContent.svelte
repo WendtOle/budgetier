@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Readable } from 'svelte/store';
 	import { derived, writable } from 'svelte/store';
+	import Card from './Card.svelte';
 
 	export let title = '';
 	export let forceExpanded: Readable<boolean> = writable(false);
@@ -19,7 +20,7 @@
 	};
 </script>
 
-<div>
+<Card>
 	{#if $isCollapsed}
 		<button class="header" on:click={handleClickOnHeader}>
 			<div class="flex gap-2">
@@ -38,7 +39,7 @@
 		</div>
 		<slot name="content" />
 	{/if}
-</div>
+</Card>
 
 <style>
 	.header {
