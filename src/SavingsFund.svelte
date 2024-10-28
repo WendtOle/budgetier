@@ -3,7 +3,6 @@
 	import { budgetBlockToEdit } from './generalStore';
 	import Slider from './Slider.svelte';
 
-	export let title: string = "Savings fund";
 	export let state: { alreadyPresent: number; willAdd: number };
 	export let onStateChange: (newState: { alreadyPresent: number; willAdd: number }) => void;
 	export let target: number;
@@ -17,7 +16,7 @@
 	$: willState = state.alreadyPresent + state.willAdd;
 </script>
 
-<Block title={title}>
+<Block id={id}>
 	<div slot="summary">
 		{state.willAdd}€
 	</div>

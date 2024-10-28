@@ -4,7 +4,6 @@
 	import type { FixedValue } from './types';
 	import { budgetBlockToEdit } from './generalStore';
 
-	export let title: string;
 	export let value: FixedValue[] = [];
 	export let handleUpdate: (newState: FixedValue[]) => void;
 	export let handleDelete: () => void;
@@ -32,7 +31,7 @@
 	$: total = value.reduce((acc, { amount }) => acc + amount, 0);
 </script>
 
-<Block {title} {forceExpanded}>
+<Block id={id} {forceExpanded}>
 	<div slot="summary">
 		{total}€
 	</div>

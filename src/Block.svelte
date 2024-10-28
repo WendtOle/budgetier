@@ -2,8 +2,9 @@
 	import type { Readable } from 'svelte/store';
 	import { derived, writable } from 'svelte/store';
 	import Card from './Card.svelte';
+	import { budget } from './generalStore';
 
-	export let title = '';
+	export let id: string;
 	export let forceExpanded: Readable<boolean> = writable(false);
 
 	const collapsed = writable(true);
@@ -18,6 +19,8 @@
 		if (!$isCollapsed) return;
 		handleToggle();
 	};
+
+	$: title = $budget.blocks[id].title
 </script>
 
 <Card>

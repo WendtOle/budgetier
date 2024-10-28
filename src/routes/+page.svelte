@@ -19,14 +19,14 @@
 			...$budget,
 			blocks: {
 				...$budget.blocks,
-				[id]: block
+				[id]: block,
 			},
 			order: [...$budget.order, id]
 		};
 	};
 
 	const addListBlock = (type: IncomeOrExpense) => () =>
-		addBlock({ type, content: [], typeOfBlock: BudgetBlockType.FixedValueList });
+		addBlock({ type, content: [], typeOfBlock: BudgetBlockType.FixedValueList, title: type === IncomeOrExpense.INCOME ? 'Income' : 'Expense' });
 
 	const addSavingsBlock = () =>
 		addBlock({
@@ -34,7 +34,8 @@
 			type: IncomeOrExpense.EXPENSE,
 			alreadyPresent: 0,
 			willAdd: 0,
-			typeOfBlock: BudgetBlockType.SavingsEntry
+			typeOfBlock: BudgetBlockType.SavingsEntry,
+			title: "Savings fund"	
 		});
 
 	$: blocks = $budget.order
@@ -92,7 +93,6 @@
 		{#if block.typeOfBlock === BudgetBlockType.FixedValueList}
 			<FixedValueListComponent
 				id={blockId}
-				title={block.title ? block.title : block.type === IncomeOrExpense.INCOME ? 'Income' : 'Expenses'}
 				handleUpdate={(value: FixedValue[]) =>
 					(($budget.blocks[blockId] as FixedValueList).content = value)}
 				value={block.content}
@@ -102,7 +102,6 @@
 		{:else if block.typeOfBlock === BudgetBlockType.SavingsEntry}
 			<SavingsFund
 				id={blockId}
-				title={block.title}
 				state={block}
 				target={2705 * 3}
 				maxAvailable={lastBlockData.income - lastBlockData.expense}
