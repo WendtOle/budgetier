@@ -9,6 +9,8 @@
 	export let handleDelete: () => void;
 	export let handleMoveUp: (() => void) | undefined;
 
+	$: actuallyMaxAvailable = maxAvailable > 0 ? maxAvailable : target - state.alreadyPresent;
+	
 	$: willState = state.alreadyPresent + state.willAdd;
 </script>
 
@@ -30,11 +32,11 @@
 				})}
 		/>
 		<Slider
-			value={(state.willAdd / maxAvailable) * 100}
+			value={(state.willAdd / actuallyMaxAvailable) * 100}
 			onChange={(newValue) =>
 				onStateChange({
 					...state,
-					willAdd: Math.round((newValue * maxAvailable) / 100)
+					willAdd: Math.round((newValue * actuallyMaxAvailable) / 100)
 				})}
 			label="Variable costs"
 			max={100}
