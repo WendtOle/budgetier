@@ -2,4 +2,13 @@
 	import '../app.css';
 </script>
 
-<slot />
+<div class="main">
+	<slot />
+</div>
+
+<style>
+	.main {
+		display: flex;
+		justify-content: center;
+	}
+</style>
