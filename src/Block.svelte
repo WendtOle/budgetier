@@ -20,7 +20,8 @@
 		handleToggle();
 	};
 
-	$: title = $budget.blocks[id].title
+	$: plainTitle = $budget.blocks[id].title
+	$: title = plainTitle.length > 20 ? plainTitle.slice(0, 20) + '...' : plainTitle
 </script>
 
 <Card>
