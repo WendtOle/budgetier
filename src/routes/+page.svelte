@@ -50,8 +50,6 @@
 				const newIncome =
 					cur.type === IncomeOrExpense.INCOME ? lastEntry.income + currSum : lastEntry.income;
 
-				console.log({ id, cur, newIncome, newExpense, lastEntry, currSum });
-
 				return [...acc, { income: newIncome, expense: newExpense, blockId: id }];
 			},
 			[] as { blockId: string; income: number; expense: number }[]
