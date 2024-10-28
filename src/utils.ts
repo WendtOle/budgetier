@@ -1,7 +1,11 @@
 import { BudgetBlockType, type BudgetBlock } from './types';
 
 export const getTotalAmount = (block: BudgetBlock): number => {
-	return block.typeOfBlock === BudgetBlockType.FixedValueList
-		? block.content.reduce((acc, { amount }) => acc + amount, 0)
-		: block.alreadyPresent + block.willAdd;
+	if (block.typeOfBlock === BudgetBlockType.FixedValueList) {
+		return block.content.reduce((acc, { amount }) => acc + amount, 0);
+	}
+	if (block.typeOfBlock === BudgetBlockType.SavingsEntry) {
+		return block.willAdd;
+	}
+	throw new Error('Unknown block type');
 };
