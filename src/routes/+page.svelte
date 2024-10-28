@@ -75,6 +75,23 @@
 		{@const block = $budget.blocks[blockId]}
 		{@const currBlockData = blocks[blockId]}
 		{@const lastBlockData = i > 0 ? blocks[$budget.order[i - 1]] : { income: 0, expense: 0 }}
+		{@const handleDelete = () => {
+			const { [blockId]: _, ...rest } = $budget.blocks;
+			$budget = {
+				...$budget,
+				blocks: rest,
+				order: $budget.order.filter((id) => id !== blockId)
+			};
+		}}
+		{@const handleMoveUp = i > 0 ? () => {
+			const index = $budget.order.indexOf(blockId);
+			if (index === 0) {
+				throw new Error('Cannot move first element up');
+			}
+			const newOrder = [...$budget.order];
+			[newOrder[index], newOrder[index - 1]] = [newOrder[index - 1], newOrder[index]];
+			$budget = { ...$budget, order: newOrder };
+		} : undefined}
 		<Card>
 			{#if block.typeOfBlock === BudgetBlockType.FixedValueList}
 				<FixedValueListComponent
@@ -82,23 +99,8 @@
 					handleUpdate={(value: FixedValue[]) =>
 						(($budget.blocks[blockId] as FixedValueList).content = value)}
 					value={block.content}
-					handleDelete={() => {
-						const { [blockId]: _, ...rest } = $budget.blocks;
-						$budget = {
-							...$budget,
-							blocks: rest,
-							order: $budget.order.filter((id) => id !== blockId)
-						};
-					}}
-					handleMoveUp={i > 0 ? () => {
-						const index = $budget.order.indexOf(blockId);
-						if (index === 0) {
-							throw new Error('Cannot move first element up');
-						}
-						const newOrder = [...$budget.order];
-						[newOrder[index], newOrder[index - 1]] = [newOrder[index - 1], newOrder[index]];
-						$budget = { ...$budget, order: newOrder };
-					} : undefined}
+					handleDelete={handleDelete}
+					handleMoveUp={handleMoveUp}
 				/>
 			{:else if block.typeOfBlock === BudgetBlockType.SavingsEntry}
 				<SavingsFund
@@ -106,6 +108,8 @@
 					target={2705 * 3}
 					maxAvailable={lastBlockData.income - lastBlockData.expense}
 					onStateChange={(newState) => ($budget.blocks[blockId] = { ...block, ...newState })}
+					handleDelete={handleDelete}
+					handleMoveUp={handleMoveUp}
 				/>
 			{/if}
 		</Card>
