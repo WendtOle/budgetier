@@ -2,7 +2,7 @@
 	import type { Readable } from 'svelte/store';
 	import { derived, writable } from 'svelte/store';
 	import Card from './Card.svelte';
-	import { budget } from './generalStore';
+	import { budget, budgetBlockToEdit } from './generalStore';
 
 	export let id: string;
 	export let forceExpanded: Readable<boolean> = writable(false);
@@ -35,7 +35,10 @@
 		</button>
 	{:else}
 		<div class="header mb-2 pb-3 border-b-2">
-			<span>{title}</span>
+			<div >
+				<span>{title}</span>
+				<button class="border rounded-md px-2" popovertarget="edit-title-popover" on:click={() => $budgetBlockToEdit = id}>edit</button>
+			</div>
 			{#if !$forceExpanded}
 				<button class="border rounded-md px-2" on:click={handleToggle}>collapse</button>
 			{/if}

@@ -47,7 +47,6 @@
 		/>
 		<span>Savings fund would reach {willState}€ - ({Math.round((willState / target) * 100)} %)</span>
 		<div class="flex w-full justify-between">
-			<button class="border rounded-md px-4 py-2" popovertarget="edit-title-popover" on:click={() => $budgetBlockToEdit = id}>Edit block name</button>
 			<button class="border rounded-md px-4 py-2" on:click={handleDelete}>Delete block</button>
 			{#if handleMoveUp !== undefined}
 				<button class="border rounded-md px-4 py-2" on:click={handleMoveUp}>Move block up</button>
