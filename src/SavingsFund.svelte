@@ -1,20 +1,23 @@
 <script lang="ts">
 	import CollapsableContent from './CollapsableContent.svelte';
+	import { budgetBlockToEdit } from './generalStore';
 	import Slider from './Slider.svelte';
 
+	export let title: string = "Savings fund";
 	export let state: { alreadyPresent: number; willAdd: number };
 	export let onStateChange: (newState: { alreadyPresent: number; willAdd: number }) => void;
 	export let target: number;
 	export let maxAvailable: number;
 	export let handleDelete: () => void;
 	export let handleMoveUp: (() => void) | undefined;
+	export let id: string;
 
 	$: actuallyMaxAvailable = maxAvailable > 0 ? maxAvailable : target - state.alreadyPresent;
 	
 	$: willState = state.alreadyPresent + state.willAdd;
 </script>
 
-<CollapsableContent title="Savings fund">
+<CollapsableContent title={title}>
 	<div slot="summary">
 		{state.willAdd}€
 	</div>
@@ -45,6 +48,7 @@
 		/>
 		<span>Savings fund would reach {willState}€ - ({Math.round((willState / target) * 100)} %)</span>
 		<div class="flex w-full justify-between">
+			<button class="border rounded-md px-4 py-2" popovertarget="edit-title-popover" on:click={() => $budgetBlockToEdit = id}>Edit block name</button>
 			<button class="border rounded-md px-4 py-2" on:click={handleDelete}>Delete block</button>
 			{#if handleMoveUp !== undefined}
 				<button class="border rounded-md px-4 py-2" on:click={handleMoveUp}>Move block up</button>

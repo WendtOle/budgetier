@@ -93,7 +93,8 @@
 		<Card>
 			{#if block.typeOfBlock === BudgetBlockType.FixedValueList}
 				<FixedValueListComponent
-					title={block.type === IncomeOrExpense.INCOME ? 'Income' : 'Expenses'}
+					id={blockId}
+					title={block.title ? block.title : block.type === IncomeOrExpense.INCOME ? 'Income' : 'Expenses'}
 					handleUpdate={(value: FixedValue[]) =>
 						(($budget.blocks[blockId] as FixedValueList).content = value)}
 					value={block.content}
@@ -102,6 +103,8 @@
 				/>
 			{:else if block.typeOfBlock === BudgetBlockType.SavingsEntry}
 				<SavingsFund
+					id={blockId}
+					title={block.title}
 					state={block}
 					target={2705 * 3}
 					maxAvailable={lastBlockData.income - lastBlockData.expense}

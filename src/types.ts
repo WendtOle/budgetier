@@ -4,6 +4,7 @@ export interface Budget {
 }
 
 export interface BaseBudgetBlock {
+	title?: string;
 	type: IncomeOrExpense;
 	typeOfBlock: BudgetBlockType;
 }
