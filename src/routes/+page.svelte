@@ -10,7 +10,6 @@
 	} from '../types';
 	import Card from '../Card.svelte';
 	import SavingsFund from '../SavingsFund.svelte';
-	import CollapsableContent from '../CollapsableContent.svelte';
 	import { getTotalAmount } from '../utils';
 
 	const newId = () => 'id-' + Math.random().toString(36).substr(2, 9);
@@ -51,6 +50,8 @@
 				const newIncome =
 					cur.type === IncomeOrExpense.INCOME ? lastEntry.income + currSum : lastEntry.income;
 
+				console.log({ id, cur, newIncome, newExpense, lastEntry, currSum });
+
 				return [...acc, { income: newIncome, expense: newExpense, blockId: id }];
 			},
 			[] as { blockId: string; income: number; expense: number }[]
@@ -62,12 +63,6 @@
 			}),
 			{} as Record<string, { income: number; expense: number }>
 		);
-
-	$: length = Object.values($budget.blocks).length;
-	$: lastBlock =
-		length > 0 ? blocks[Object.keys($budget.blocks)[length - 1]] : { income: 0, expense: 0 };
-	$: rest = lastBlock.income - lastBlock.expense;
-	$: totalIncome = lastBlock.income;
 </script>
 
 <svelte:head>
@@ -126,15 +121,6 @@
 		>
 		<button class="border rounded-md px-2" on:click={addSavingsBlock}>Add savings block</button>
 	</div>
-	<Card
-		><CollapsableContent title="Investing">
-			<div slot="summary">{rest} €</div>
-			<div slot="content">
-				<div>Rest which is not assigned yet: {rest} €</div>
-				<div>{((rest / totalIncome) * 100).toPrecision(3)} % of total budget</div>
-			</div>
-		</CollapsableContent></Card
-	>
 </div>
 
 <style>
